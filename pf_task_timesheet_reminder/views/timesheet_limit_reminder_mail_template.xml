@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="timesheet_limit_reminder_email_template" model="mail.template">
+        <field name="name">Task Timesheet Limit Reminder mail template</field>
+        <field name="model_id" ref="project.model_project_task" />
+        <field name="subject">Task Timesheet Limit Reminder for {{object.name}}</field>
+        <field name="email_from">{{user.email or ''}}</field>
+        <field name="email_to">{{object.user_ids[:1].email or user.email or 'no-reply@example.com'}}</field>
+        <field name="lang">{{ object.user_ids[:1].lang or 'en_US' }}</field>
+        <field name="auto_delete" eval='True'></field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Task Timesheet Limit Reminder !!!</p>
+
+                <p>-----You are more hours spend than initial hours-----</p>
+
+                <p>
+                    Task Name : <t t-out="object.name"/>
+                </p>
+
+                <p>
+                    Task Status : <t t-out="dict(object._fields['state'].selection).get(object.state)"/>
+                </p>
+                
+                <p>
+                    Total Initial Hours : <t t-out="object.allocated_hours"/>
+                </p>
+
+                <p>
+                    Total Spent Hours : <t t-out="object.effective_hours"/>
+                </p>
+
+                <p>
+                    Total Over Hours : <t t-out="abs(object.remaining_hours)"/>
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>
